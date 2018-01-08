@@ -1,0 +1,42 @@
+{
+  "slack": {
+    "name": "Twttr",
+    "icon": "http://i68.tinypic.com/21bngk9.png",
+    "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+    "color": "#36a64f",
+    "channelName": "monitor",
+    "sendToChannel": false,
+    "sendDM": true,
+    "users": ["gainorbostwick"]
+  },
+  "data": {
+    "useKeywords": false,
+    "keywords": [
+      "adidas",
+      "nike",
+      "boost",
+      "yeezy",
+      "ultraboost",
+      "nmd",
+      "vapormax",
+      "jordan",
+      "cart"
+    ],
+    "accountsToTrack": [
+      "SOLELINKS",
+      "KithSet",
+      "JustFreshKicks",
+      "solelinksWW",
+      "adidasalerts",
+      "BOOSTLINKS",
+      "theyeezymafia",
+      "NikeNYC",
+      "NikeLab",
+      "adidasoriginals",
+      "adidas",
+      "KicksDeals",
+      "FatKidDeals",
+      "slickdeals"
+    ]
+  }
+}
