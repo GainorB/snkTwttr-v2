@@ -7,6 +7,7 @@ const config = require('./config.json');
 const getUrls = require('get-urls');
 const moment = require('moment');
 const log = console.log;
+const Twitter = require('twitter');
 let output = {};
 
 const stream = new Stream({
@@ -15,6 +16,33 @@ const stream = new Stream({
   access_token_key: process.env.access_token_key,
   access_token_secret: process.env.access_token_secret
 });
+
+// const client = new Twitter({
+//   consumer_key: process.env.consumer_key,
+//   consumer_secret: process.env.consumer_secret,
+//   access_token_key: process.env.access_token_key,
+//   access_token_secret: process.env.access_token_secret
+// });
+
+// const stream = client.stream('statuses/filter', { track: 'javascript' });
+// stream.on('data', function(event) {
+//   console.log(event && event.text);
+// });
+
+stream.on('error', function(error) {
+  throw error;
+});
+
+// You can also get the stream in a callback if you prefer.
+// client.stream('statuses/filter', { track: 'javascript' }, function(stream) {
+//   stream.on('data', function(event) {
+//     console.log(event && event.text);
+//   });
+
+//   stream.on('error', function(error) {
+//     throw error;
+//   });
+// });
 
 const bot = new SlackBot({
   token: process.env.slack_token,
@@ -143,11 +171,11 @@ function newSlackMessage(data) {
 }
 
 // error with stream
-stream.on('error', function(error) {
-  log('Connection error:');
-  log('------------------');
-  log(error);
-});
+// stream.on('error', function(error) {
+//   log('Connection error:');
+//   log('------------------');
+//   log(error);
+// });
 
 // incorrect data
 // stream.on('garbage', function(data) {
@@ -155,9 +183,9 @@ stream.on('error', function(error) {
 //   log(data);
 // });
 
-// stream closed
-stream.on('close', function(error) {
-  log('Stream closed');
-  log('------------------');
-  log(error);
-});
+// // stream closed
+// stream.on('close', function(error) {
+//   log('Stream closed');
+//   log('------------------');
+//   log(error);
+// });
