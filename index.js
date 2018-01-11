@@ -17,33 +17,6 @@ const stream = new Stream({
   access_token_secret: process.env.access_token_secret
 });
 
-// const client = new Twitter({
-//   consumer_key: process.env.consumer_key,
-//   consumer_secret: process.env.consumer_secret,
-//   access_token_key: process.env.access_token_key,
-//   access_token_secret: process.env.access_token_secret
-// });
-
-// const stream = client.stream('statuses/filter', { track: 'javascript' });
-// stream.on('data', function(event) {
-//   console.log(event && event.text);
-// });
-
-stream.on('error', function(error) {
-  throw error;
-});
-
-// You can also get the stream in a callback if you prefer.
-// client.stream('statuses/filter', { track: 'javascript' }, function(stream) {
-//   stream.on('data', function(event) {
-//     console.log(event && event.text);
-//   });
-
-//   stream.on('error', function(error) {
-//     throw error;
-//   });
-// });
-
 const bot = new SlackBot({
   token: process.env.slack_token,
   name: config.slack.name
@@ -77,31 +50,23 @@ function welcome() {
   log(chalk.red.bgBlack(`-------------------`));
 }
 
-// if (config.data.useKeywords) {
-//   const keywords = config.data.keywords.join(', ');
-//   log(chalk.red.bgBlack(`Monitoring tweets containing => ${keywords}`));
-// }
+if (config.data.useKeywords) {
+  const keywords = config.data.keywords.join(', ');
+  log(chalk.red.bgBlack(`Monitoring tweets containing => ${keywords}`));
+}
 
-// const params = {
-//   track: config.data.keywords.join(',')
-// };
+const params = {
+  track: config.data.keywords.join(',')
+};
 
-// stream.stream(config.data.useKeywords && params);
-stream.stream();
+stream.stream(config.data.useKeywords && params);
 
 // connected to stream
 stream.on('connected', function() {
   log('Stream connected!');
 });
 
-// check stream
-// stream.on('heartbeat', function() {
-//   log('Heartbeat');
-// });
-
 stream.on('data', function(data) {
-  // log(data.user.screen_name);
-
   config.data.accountsToTrack.forEach(account => {
     if (account == data.user.screen_name) {
       output.screen_name = data.user.screen_name;
@@ -171,21 +136,21 @@ function newSlackMessage(data) {
 }
 
 // error with stream
-// stream.on('error', function(error) {
-//   log('Connection error:');
-//   log('------------------');
-//   log(error);
-// });
+stream.on('error', function(error) {
+  log('Connection error:');
+  log('------------------');
+  log(error);
+});
 
 // incorrect data
-// stream.on('garbage', function(data) {
-//   log(`Can\'t be formatted:`);
-//   log(data);
-// });
+stream.on('garbage', function(data) {
+  log(`Can\'t be formatted:`);
+  log(data);
+});
 
-// // stream closed
-// stream.on('close', function(error) {
-//   log('Stream closed');
-//   log('------------------');
-//   log(error);
-// });
+// stream closed
+stream.on('close', function(error) {
+  log('Stream closed');
+  log('------------------');
+  log(error);
+});
