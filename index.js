@@ -7,7 +7,6 @@ const config = require('./config.json');
 const getUrls = require('get-urls');
 const moment = require('moment');
 const log = console.log;
-const Twitter = require('twitter');
 let output = {};
 
 const stream = new Stream({
@@ -20,12 +19,6 @@ const stream = new Stream({
 const bot = new SlackBot({
   token: process.env.slack_token,
   name: config.slack.name
-});
-
-bot.on('start', function() {
-  bot.postMessageToChannel(config.slack.channelName, `🤖 Monitoring twitter!`, {
-    icon_url: config.slack.icon
-  });
 });
 
 welcome();
@@ -50,10 +43,21 @@ function welcome() {
   log(chalk.red.bgBlack(`-------------------`));
 }
 
+const keywords = config.data.keywords.join(', ');
+
 if (config.data.useKeywords) {
-  const keywords = config.data.keywords.join(', ');
   log(chalk.red.bgBlack(`Monitoring tweets containing => ${keywords}`));
 }
+
+bot.on('start', function() {
+  bot.postMessageToChannel(
+    config.slack.channelName,
+    `🤖 Monitoring => ${config.data.accountsToTrack.map(e => `@${e}`).join(', ')}!`,
+    {
+      icon_url: config.slack.icon
+    }
+  );
+});
 
 const params = {
   track: config.data.keywords.join(',')
@@ -140,12 +144,6 @@ stream.on('error', function(error) {
   log('Connection error:');
   log('------------------');
   log(error);
-});
-
-// incorrect data
-stream.on('garbage', function(data) {
-  log(`Can\'t be formatted:`);
-  log(data);
 });
 
 // stream closed
