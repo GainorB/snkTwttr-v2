@@ -8,6 +8,7 @@ const getUrls = require('get-urls');
 const moment = require('moment');
 const log = console.log;
 let output = {};
+let updateCount = 0;
 
 const stream = new Stream({
   consumer_key: process.env.consumer_key,
@@ -72,7 +73,7 @@ stream.on('connected', function() {
 
 stream.on('data', function(data) {
   config.data.accountsToTrack.forEach(account => {
-    if (account == data.user.screen_name) {
+    if (account.toLowerCase() == data.user.screen_name.toLowerCase()) {
       output.screen_name = data.user.screen_name;
       output.id = data.id;
 
@@ -101,9 +102,10 @@ stream.on('data', function(data) {
 });
 
 function newSlackMessage(data) {
+  updateCount++;
   const { screen_name, tweetLink, text, id, media } = data;
   const now = moment().format('MMMM Do YYYY, h:mm:ss a');
-  log(chalk.red.bgBlack.bold(`New update (${id}) from @${screen_name} on ${now}`));
+  log(chalk.red.bgBlack.bold(`New update ${updateCount} (${id}) from @${screen_name} on ${now}`));
 
   const params = {
     icon_url: config.slack.icon,
